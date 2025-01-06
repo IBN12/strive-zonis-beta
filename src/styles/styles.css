@@ -1,0 +1,76 @@
+/* body - The entire body for the application. */
+body{
+    padding: 0;
+    margin: 0;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+/***************************************************************************************************************************************************************************/
+/***************************************************************************************************************************************************************************/
+/* Mobile and Desktop Miniturization */
+
+/* Media-0 - For mobile viewports */
+@media only screen and (max-width: 1000px)
+{
+    /* |Main Content| */
+    #content{
+        border: 1px solid red;
+        padding: 5px; 
+    }
+
+    /* |Main Menu Content| */
+    .main-menu-content{
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        gap: 10px;
+
+        border: 1px solid purple;
+    }
+
+    /* |Shuffle Cards Content| */
+    .shuffle-cards-content{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        border: 1px solid orange;
+        padding: 5px;
+        margin-top: 20px; 
+    }
+
+    .display-cards-section{ /* Display cards container */
+        display: flex; 
+        justify-content: center; 
+        gap: 5px; 
+
+        border: 1px solid blue;
+    }
+    .display-cards-section > div{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        border: 1px solid black;
+        width: 65px;
+        height: 65px;
+        font-size: 10px;
+        text-align: center;
+    }
+    .shuffle-card-animation{ /* Shuffle Card Animation for the Display cards container. */
+        animation-name: shuffleCardAnimation;
+        animation-duration: 1s;
+        animation-timing-function: ease-in-out;
+    }
+    @keyframes shuffleCardAnimation{
+        from {
+            transform: scale(1);
+        }
+        to {
+            transform: scale(1.2); 
+        }
+    }
+} 
