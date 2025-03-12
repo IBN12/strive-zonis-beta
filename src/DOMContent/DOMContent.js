@@ -33,13 +33,16 @@ function AppTitle(){
 function MenuButtons(){
     const mainMenuContent = document.querySelector('.main-menu-content'); 
 
+    // Start Game:
     const startButton = document.createElement('button');
     startButton.textContent = 'Start Game';
     startButton.addEventListener('click', StartGame);
 
+    // Settings:
     const settingsButton = document.createElement('button');
     settingsButton.textContent = 'Settings';
 
+    // SoSu Studio Port/Main Page: 
     const sosuStudioButton = document.createElement('button');
     sosuStudioButton.textContent = 'SoSu Studio';
 

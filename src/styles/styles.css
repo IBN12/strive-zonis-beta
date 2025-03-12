@@ -73,4 +73,63 @@ body{
             transform: scale(1.2); 
         }
     }
+
+    .card-info-window{ /* The main card info window for the each card being displayed in the 'Display Card Section'. */
+        position: relative;
+        top: -120px; /* This will change based on the final page size. */
+
+        border: 1px solid red; 
+        background-color: rgba(255, 0, 0, 0.432);
+        padding: 10px; 
+    }
+    .card-info-window > div{ /* Close Window Button Section */
+        display: flex;
+        justify-content: end; 
+        border: 1px solid green;
+    }
+    .card-info-window > div > img[src]{
+        width: 50px;
+    }
+    .open-card-info-window{ /* Will open the card info window with a keyframe animation. */ 
+        animation-name: openCardInfoWindow;
+        animation-duration: .5s;
+        animation-timing-function: ease-in-out;
+        /* animation-fill-mode: forwards; */
+    }
+    @keyframes openCardInfoWindow{
+        from{
+            transform: perspective(800px) translateZ(-4000px);
+        }
+        to{
+            transform: perspective(800px) translateZ(25px); 
+        }
+    }
+    .close-card-info-window{ /* Will close the card info window with a keyframe animation. */
+        animation-name: closeCardInfoWindow;
+        animation-duration: .5s;
+        animation-timing-function: ease-in-out;
+        animation-fill-mode: forwards;
+    }
+    @keyframes closeCardInfoWindow{
+        from{
+            transform: perspective(800px) translateZ(25px); 
+        }
+        to{
+            transform: perspective(800px) translateZ(-4000px); 
+        }
+    }
+
+    .shuffle-limit-reached{
+        animation-name: shuffleLimitReached;
+        animation-duration: 1s;
+        animation-timing-function: ease-in-out;
+    }
+    @keyframes shuffleLimitReached{
+        from{ 
+            transform: scale(1)
+        }
+        to{
+            transform: scale(1.1); 
+        }
+    }
 } 
