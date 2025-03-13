@@ -8,6 +8,9 @@ body{
     box-sizing: border-box;
 }
 
+.no-click{
+    pointer-events: none;  
+}
 /***************************************************************************************************************************************************************************/
 /***************************************************************************************************************************************************************************/
 /* Mobile and Desktop Miniturization */
@@ -123,6 +126,7 @@ body{
         animation-name: shuffleLimitReached;
         animation-duration: 1s;
         animation-timing-function: ease-in-out;
+        border: 1px solid red;
     }
     @keyframes shuffleLimitReached{
         from{ 
@@ -131,5 +135,14 @@ body{
         to{
             transform: scale(1.1); 
         }
+    }
+    .shuffle-limit-reached > span{
+        color: red; 
+    }
+
+    /* |Battle Levels Content| */ 
+    .battle-levels-content{
+        border: 1px solid green; 
+        margin-top: 20px; 
     }
 } 

@@ -4,6 +4,7 @@ export function InitiateApplication(){
 
     MainMenuDOM();
     ShuffleCardsDOM(); 
+    BattleLevelsDOM(); 
 }
 
 // MainMenuContent(): The main menu content. 
@@ -66,3 +67,12 @@ function ShuffleCardsDOM(){
     content.appendChild(shuffleCardsContent); 
 }
 
+//BattleLevelsDOM(): Battle level content.
+function BattleLevelsDOM(){
+    const content = document.getElementById('content');
+
+    const battleLevelsContent = document.createElement('div'); 
+    battleLevelsContent.classList.add('battle-levels-content'); 
+
+    content.appendChild(battleLevelsContent);  
+}

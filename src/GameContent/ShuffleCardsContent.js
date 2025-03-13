@@ -1,8 +1,11 @@
 import { userCards } from "../GameProg/UserCards";
 import { ShuffleGate } from "../GameProg/ShuffleGate";
 import { gameTools } from "../GameProg/GameTools";
+import { ModifyContentTools } from "../GameProg/ModifyContentTools";
 
 import closeButton from "../Images/GameTools/window-close.svg"; 
+
+import { BattleLevelsContent } from "./BattleLevelsContent";
 
 // ShuffleCardsContent(): The shuffle cards content.
 export function ShuffleCardsContent(controls){
@@ -96,7 +99,9 @@ function OpenCardInfoWindow(e){
     closeWindowButton.src = closeButton;
     closeWindowButtonSection.appendChild(closeWindowButton);
     closeWindowButton.addEventListener('click', CloseCardInfoWindow); 
-    
+
+    ModifyContentTools('Shuffle Cards Content', 'open card info window'); 
+
     cardInfoWindow.appendChild(closeWindowButtonSection);
     shuffleCardsContent.appendChild(cardInfoWindow); 
 } 
@@ -110,7 +115,10 @@ function CloseCardInfoWindow(){
     cardInfoWindow.classList.add('close-card-info-window');
 
     // WGO: Wait a half second for the animation to end before removing 'card info window'. 
-    setTimeout(() => {shuffleCardsContent.removeChild(cardInfoWindow)}, 500);
+    setTimeout(() => {shuffleCardsContent.removeChild(cardInfoWindow);}, 500);
+
+    // WGO: Wait to remove the 'no-click class' when the player closes the window to avoid rapid-clicks. 
+    setTimeout(() => {ModifyContentTools('Shuffle Cards Content', 'close card info window');}, 700); 
 }
 
 // ShuffleButton(): Will shuffle cards in the card deck.  
@@ -149,7 +157,19 @@ function StartButton(){
     const startButton = document.createElement('button'); 
     startButton.textContent = 'Start';
 
+    if (userCards.length === 0)
+    {
+        startButton.disabled = true;  
+    }
+
+    startButton.addEventListener('click', StartGame); 
+
     shuffleCardsContent.appendChild(startButton); 
+}
+
+// StartGame(): Will begin the game.
+function StartGame(){
+    BattleLevelsContent(0); 
 }
 
 // ShuffleCards(): Will shuffle the cards consistently. 
