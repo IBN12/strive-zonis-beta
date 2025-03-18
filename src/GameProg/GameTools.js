@@ -2,4 +2,6 @@
 export const gameTools = {
     numberOfShuffles: 0,
     shuffleLimitReached: false, 
+    battleCard: null,
+    switchedCards: false,
 }

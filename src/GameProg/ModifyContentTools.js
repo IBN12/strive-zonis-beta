@@ -26,5 +26,11 @@ export function ModifyContentTools(content, reason){
                 button.disabled = false;
             }); 
         }
+        else if (reason === 'shuffle cards')
+        {
+            shuffleCardsDisplayed.forEach((card) => {
+                card.classList.add('no-click');
+            });
+        }
     }
 }

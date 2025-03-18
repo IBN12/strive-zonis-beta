@@ -1,6 +1,7 @@
 export let initiatorCards = [
     {
         name: "Tobo The Fighter",
+        shortName: "Tobo",
         cate: "supra", 
         attk: 45,
         def: 12,
@@ -9,6 +10,7 @@ export let initiatorCards = [
 
     {
         name: "The One From System", 
+        shortName: "Jace", 
         cate: "supra",
         attk: 44,
         def: 14,
@@ -17,6 +19,7 @@ export let initiatorCards = [
 
     {
         name: "Spunky With The Funky Draco",
+        shortName: "Spunky",
         cate: "supra",
         attk: 39,
         def: 17,
@@ -25,6 +28,7 @@ export let initiatorCards = [
 
     {
         name: "Allybelle",
+        shortName: "Ally",
         cate: "fere",
         attk: 27,
         def: 15,
@@ -33,6 +37,7 @@ export let initiatorCards = [
 
     {
         name: "The Experiment",
+        shortName: "Mason", 
         cate: "fere",
         attk: 24,
         def: 13,
@@ -41,6 +46,7 @@ export let initiatorCards = [
 
     {
         name: "The Trendsetter Rotao",
+        shortName: "Rotao",
         cate: "fere",
         attk: 25,
         def: 18,
@@ -49,6 +55,7 @@ export let initiatorCards = [
     
     {
         name: "Dan The Prol",
+        shortName: "Dan",
         cate: "bonum",
         attk: 19,
         def: 22,
@@ -57,6 +64,7 @@ export let initiatorCards = [
     
     {
         name: "Mac The Rat",
+        shortName: "Mac", 
         cate: "bonum",
         attk: 16,
         def: 33, 
@@ -65,6 +73,7 @@ export let initiatorCards = [
 
     {
         name: "A Karen",
+        shortName: "Karen",
         cate: "bonum",
         attk: 15,
         def: 26,
@@ -73,6 +82,7 @@ export let initiatorCards = [
 
     {
         name: "The Office Worker Ken",
+        shortName: "Ken", 
         cate: "bonum", 
         attk: 16,
         def: 25,

@@ -127,10 +127,11 @@ function ShuffleButton(){
     
     const shuffleButton = document.createElement('button');
 
+    // Will reach shuffle limit after 3 initial shuffles.  
     if (gameTools.numberOfShuffles === 3)
     {
         console.log('Shuffle limit reached'); // Testing 
-        gameTools.shuffleLimitReached = true;
+        gameTools.shuffleLimitReached = true; // Not utilized 
         shuffleButton.removeEventListener('click', ShuffleCards); 
         shuffleButton.classList.add('shuffle-limit-reached');
         shuffleButton.innerHTML = `Shuffle (${gameTools.numberOfShuffles}) <span>Limit Reached</span>`; 
@@ -181,6 +182,9 @@ function ShuffleCards(e){
     gameTools.numberOfShuffles++; 
     console.log('Shuffles: ', gameTools.numberOfShuffles); // Testing 
     console.log('\n'); // Testing 
+
+    // WGO: Discontinue clicking on the each card in the 'display cards' section.
+    ModifyContentTools('Shuffle Cards Content', 'shuffle cards'); 
 
     // Disable all the buttons to avoid rapid user clicks. 
     const shuffleButton = document.querySelectorAll('.shuffle-cards-content > button');
