@@ -166,12 +166,23 @@ body{
     }
     .battle-arena-section > section{ /* User card & Comp Card in the Battle Arena Section. */ 
         display: flex;
-        align-items: center; 
 
-        text-align: center; 
         border: 1px solid black; 
         width: 80px; /* The width and height will change once the card art is implemented. */ 
         height: 80px; 
+    }
+
+    .battle-card-stats-section{ /* Battle Card Stats Section */
+        display: flex;
+        border: 1px solid cornflowerblue;
+        padding: 3px; 
+    }
+    .battle-card-stats-section > section{ /* User Battle Card Stats & Comp Battle Card Stats */
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        
+        border: 1px solid black;
     }
 
     .battle-card-deck-section{ /* Battle Card Deck Section */
@@ -189,10 +200,16 @@ body{
         padding: 3px;
         border: 1px solid lightseagreen;
     }
-    .battle-card-deck-section > section > div{
+    .battle-card-deck-section > section > div{ /* Each card in both deck sections */ 
         font-size: 10px; 
         border: 1px solid black; 
     }
+
+    .battle-command-section{ /* Battle Command Section */ 
+        border: 1px solid lightcoral;
+        padding: 3px; 
+    }
+
 
 
 } 

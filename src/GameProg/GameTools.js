@@ -4,4 +4,9 @@ export const gameTools = {
     shuffleLimitReached: false, 
     battleCard: null,
     switchedCards: false,
+    currentLevel: 1,
+    
+    compBattleCard: null,
+    compSwitchedCards: false,
+    compCardDeckCreated: false, 
 }
