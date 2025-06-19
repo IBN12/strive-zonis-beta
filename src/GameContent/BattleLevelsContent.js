@@ -2,6 +2,7 @@ import { gameTools } from "../GameProg/GameTools";
 import { userCards } from "../GameProg/UserCards";
 import { levels } from "../GameProg/Levels";
 import { otherCards } from "../GameProg/OtherCards";
+import { Actions } from "../GameProg/Actions";
 import { CreateCompCardDeck, compCards } from "../GameProg/CompCards";
 
 // BattleLevelsContent(): The battle level content.
@@ -22,6 +23,7 @@ export function BattleLevelsContent(controls){
 
     const battleLevelsContent = document.querySelector('.battle-levels-content'); 
     // const battleLevelSection = document.querySelector('.battle-level-section');
+    const battleSingularityPointSection = document.querySelector('.battle-singularity-point-section'); 
     const battleArenaSection = document.querySelector('.battle-arena-section'); 
     const battleCardStatsSection = document.querySelector('.battle-card-stats-section'); 
     const battleCardDeckSection = document.querySelector('.battle-card-deck-section');
@@ -30,6 +32,7 @@ export function BattleLevelsContent(controls){
     if (controls === 0)
     {
         BattleLevelSection();
+        BattleSingularityPointSection();
         BattleArenaSection();
         
         BattleCardStatsSection(); 
@@ -38,10 +41,12 @@ export function BattleLevelsContent(controls){
     }
     else if (controls === 1)
     {
+        battleLevelsContent.removeChild(battleSingularityPointSection);
         battleLevelsContent.removeChild(battleArenaSection);
         battleLevelsContent.removeChild(battleCardStatsSection); 
         battleLevelsContent.removeChild(battleCardDeckSection); 
         battleLevelsContent.removeChild(battleCommandSection); 
+        BattleSingularityPointSection(); 
         BattleArenaSection();
         BattleCardStatsSection();
         BattleCardDeckSection(); 
@@ -71,6 +76,24 @@ function BattleLevelSection(){
     battleLevelsContent.appendChild(battleLevelSection); 
 }
 
+// BattleSingularityPointSection(): This section will contain all the singularity points obtained during battle.
+function BattleSingularityPointSection(){
+    const battleLevelsContent = document.querySelector('.battle-levels-content'); 
+
+    const battleSingularityPointSection = document.createElement('section'); 
+    battleSingularityPointSection.classList.add('battle-singularity-point-section');
+
+    const userSP = document.createElement('section'); 
+    userSP.textContent = '0 SP';
+    const compSP = document.createElement('section'); 
+    compSP.textContent = '0 SP';
+
+    battleSingularityPointSection.appendChild(userSP);
+    battleSingularityPointSection.appendChild(compSP); 
+
+    battleLevelsContent.appendChild(battleSingularityPointSection); 
+}
+
 // BattleSection(): All battles will occur here against the computer.
 function BattleArenaSection(){
     const battleLevelsContent = document.querySelector('.battle-levels-content');
@@ -98,7 +121,7 @@ function BattleArenaSection(){
     }
     else
     {
-        gameTools.compBattleCard = compCards[0]; // Set 'current comp battle card' before comp switches cards. 
+        gameTools.compBattleCard = compCards[0].name; // Set 'current comp battle card' before comp switches cards. 
         compCard.textContent = compCards[0].name;  // Default comp card for th  battle arena before switching cards. 
     }
     
@@ -140,9 +163,30 @@ function BattleCardStatsSection(){
 
     // Comp Battle Card Stats--- 
     const compBattleCardStats = document.createElement('section'); 
-    
+    compCards.forEach((card) => {
+        if (card.name === gameTools.compBattleCard)
+        {
+            const cate = document.createElement('div');
+            cate.textContent = `Cate: ${card.cate}`;
 
+            const attk = document.createElement('div');
+            attk.textContent = `Attk: ${card.attk}`;
+
+            const def = document.createElement('div');
+            def.textContent = `Def: ${card.def}`;
+
+            const esse = document.createElement('div'); 
+            esse.textContent = `Esse: ${card.esse}`;
+
+            compBattleCardStats.appendChild(cate);
+            compBattleCardStats.appendChild(attk);
+            compBattleCardStats.appendChild(def);
+            compBattleCardStats.appendChild(esse); 
+        }
+    });
+    
     battleCardStatsSection.appendChild(userBattleCardStats); 
+    battleCardStatsSection.appendChild(compBattleCardStats); 
     battleLevelsContent.appendChild(battleCardStatsSection);  
 }
 
@@ -214,7 +258,69 @@ function BattleCommandSection(){
     const defendButton = document.createElement('button'); 
     defendButton.textContent = "Defend";
 
+    attackButton.addEventListener('click', PlayerMove);
+    defendButton.addEventListener('click', PlayerMove); 
+
     battleCommandSection.appendChild(attackButton); 
     battleCommandSection.appendChild(defendButton); 
     battleLevelsContent.appendChild(battleCommandSection); 
+}
+
+// PlayerMove(): Each player move command will be stationed in this function. 
+function PlayerMove(e){
+    const compCard = document.querySelector('.battle-arena-section > section:nth-child(2)');
+
+    if (e.target.textContent === 'Attack') // Attack Move
+    {
+        const userCard = document.querySelector('.battle-arena-section > section:nth-child(1)');
+        userCard.classList.add('user-card-attack-anim');
+
+        // SetUp: set up a function for all player and computer movements. 
+        // Example: Actions() => Will return the attack damage made on the computer card.
+        const actionResponse = Actions('Attack', gameTools.battleCard, gameTools.compBattleCard); 
+
+        const damage = document.createElement('div'); 
+        damage.textContent = actionResponse; 
+
+        compCard.appendChild(damage); 
+    }
+    if (e.target.textContent === 'defend') // Defend Move 
+    {
+        const userCard = document.querySelector('.battle-arena-section > section:nth-child(1)'); 
+        console.log(userCard); // Testing 
+    }
+
+    // WGO: (1) Will call the computer move function after the player move has been initiated.
+    // The computer move will have a timer in-order for the player animation to finish. 
+    // Overall wait for the computer movement will be 1.2 secs for right now.
+    // We are using time for simple algorithms.  
+    // (2) The computers damage caused by the players attack will also be removed once
+    // the computer is ready for their action. 
+    setTimeout(() => { 
+        const damage = document.querySelector('.battle-arena-section > section:nth-child(2) > div');
+        compCard.removeChild(damage); 
+        ComputerMove(); 
+    }, 1200);
+}
+
+// ComputerMove(): Each player move command will be stationed in this function.
+function ComputerMove(){
+    console.log('Computer turn to attack...'); // Testing 
+    // TODO Note: I will have to implement some type of the computer movement algorithm.
+    // I may base it on a difficulty level and machine learning algorithms. 
+    // But for now I will make a simple algorithm for computer movement. 
+
+    /** Simple Algorithm Computer Movement:
+     * Note: This algorithm is temporary
+     * compMovement => variable will hold every computer movement. Temporary movement is attack. 
+     * Case 1: Computer Attack
+    */
+    const compMovement = 'Attack';
+
+    if (compMovement === 'Attack') // Computer Attack
+    {
+        const compCard = document.querySelector('.battle-arena-section > section:nth-child(2)');
+        compCard.classList.add('comp-card-attack-anim');
+    }
+
 }

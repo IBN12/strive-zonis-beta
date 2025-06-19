@@ -157,6 +157,18 @@ body{
         margin: 0; 
     }
 
+    .battle-singularity-point-section{ /* Battle Sigularity Point Section */
+        display: flex;
+
+        border: 1px solid olive;
+    }
+    .battle-singularity-point-section > section{
+        flex: 1;
+        
+        text-align: center; 
+        border: 1px solid black;
+    }
+
     .battle-arena-section{ /* Battle Arena Section */ 
         display: flex; 
         justify-content: space-between;
@@ -171,9 +183,26 @@ body{
         width: 80px; /* The width and height will change once the card art is implemented. */ 
         height: 80px; 
     }
+    .battle-arena-section > section:nth-child(2) > div{ /* Comp Card Battle Damage - Will contain damage animation. */
+        border: 1px solid black;
+        position: absolute;
+        animation-name: compCardBattleAnim;
+        animation-duration: 0.7s; 
+        animation-timing-function: ease-in-out;
+        animation-fill-mode: forwards;  
+    }
+    @keyframes compCardBattleAnim{
+        from{
+            transform: translate(0);
+        }
+        to{
+            transform: translate(-100px, -20px); 
+        }
+    }
 
     .battle-card-stats-section{ /* Battle Card Stats Section */
         display: flex;
+        justify-content: space-between;
         border: 1px solid cornflowerblue;
         padding: 3px; 
     }
@@ -206,10 +235,36 @@ body{
     }
 
     .battle-command-section{ /* Battle Command Section */ 
+        display: flex;
+        justify-content: space-around;
+
         border: 1px solid lightcoral;
         padding: 3px; 
     }
-
-
-
+    .user-card-attack-anim{ /* Battle Command: User Attack Anim */
+        animation-name: userAttackAnim;
+        animation-duration: 0.5s;
+        animation-timing-function: ease-in-out;
+    }
+    @keyframes userAttackAnim{
+        from{
+            transform: translateX(0);
+        }
+        to{
+            transform: translateX(20px); 
+        }
+    }
+    .comp-card-attack-anim{ /* Battle Commmand: Computer Attack Anim */
+        animation-name: compAttackAnim;
+        animation-duration: 0.5s;
+        animation-timing-function: ease-in-out; 
+    }
+    @keyframes compAttackAnim{
+        from{
+            transform: translateX(0); 
+        }
+        to{
+            transform: translateX(-20px);  
+        }
+    }
 } 
