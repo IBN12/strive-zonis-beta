@@ -11,7 +11,11 @@ export function BattleLevelsContent(controls){
      * 0 => The initial start for all content declaration in the BattleLevelsContent() function.
      * 
      * 1 => The 'BattleArenaSection()' and 'BattleCardDeckSection()' will be reset after the player
-     * switches cards in the 'BattleCardDeckSection()' function. 
+     * switches cards in the 'BattleCardDeckSection()' function.
+     * 
+     * 2 => Will reset all the sections to display the computers new esse stat in the
+     * 'BattleCardStatsSection'. This is done right after the player attacks the computer,
+     * and the computer produces the damage output. 
      */
 
     // Create comp card deck based on the level: 
@@ -51,6 +55,19 @@ export function BattleLevelsContent(controls){
         BattleCardStatsSection();
         BattleCardDeckSection(); 
         BattleCommandSection(); 
+    }
+    else if (controls === 2)
+    {
+        battleLevelsContent.removeChild(battleSingularityPointSection); 
+        battleLevelsContent.removeChild(battleArenaSection);
+        battleLevelsContent.removeChild(battleCardStatsSection); 
+        battleLevelsContent.removeChild(battleCardDeckSection);
+        battleLevelsContent.removeChild(battleCommandSection); 
+        BattleSingularityPointSection();
+        BattleArenaSection(); 
+        BattleCardStatsSection();
+        BattleCardDeckSection();
+        BattleCommandSection();
     }
 }
 
@@ -269,20 +286,39 @@ function BattleCommandSection(){
 // PlayerMove(): Each player move command will be stationed in this function. 
 function PlayerMove(e){
     const compCard = document.querySelector('.battle-arena-section > section:nth-child(2)');
+    const userCard = document.querySelector('.battle-arena-section > section:nth-child(1)');
 
     if (e.target.textContent === 'Attack') // Attack Move
     {
-        const userCard = document.querySelector('.battle-arena-section > section:nth-child(1)');
         userCard.classList.add('user-card-attack-anim');
 
-        // SetUp: set up a function for all player and computer movements. 
-        // Example: Actions() => Will return the attack damage made on the computer card.
-        const actionResponse = Actions('Attack', gameTools.battleCard, gameTools.compBattleCard); 
+        // Actions(): Will represent all Player and Computer Movements. 
+        const actionResponse = Actions('Attack', 'Player', gameTools.battleCard, gameTools.compBattleCard); 
 
         const damage = document.createElement('div'); 
         damage.textContent = actionResponse; 
 
-        compCard.appendChild(damage); 
+        console.log("User SP: ", gameTools.userSingularityPoints); // Testing 
+
+        // WGO: Will append the the 'Comp Battle Card' and produce the damage response cause by the players attack.
+        // Will wait 0.5secs for the damage element to append so the computer doesn't attack right when the damage appends. 
+        setTimeout(() => {
+            compCard.appendChild(damage);
+        }, 500); 
+
+        // WGO: (1) Will remove the Player 'user card attack animation'.
+        // (2) Damage response will be removed from the 'Comp Battle Card'. 
+        // (3) Will reset all the sections in the 'Battle Levels Content' to showcase the new amount of esse
+        // that the 'Comp Battle Card' has after the damage caused the Player (An extra 800 secs added after the
+        // damage response was added to the 'Comp Battle Card' | Total Time: 1300 secs | Control === 2). 
+        setTimeout(() => {
+            userCard.classList.remove('user-card-attack-anim');
+
+            const damage = document.querySelector('.battle-arena-section > section:nth-child(2) > div');
+            compCard.removeChild(damage); 
+
+            BattleLevelsContent(2); 
+        }, 1300);
     }
     if (e.target.textContent === 'defend') // Defend Move 
     {
@@ -292,19 +328,18 @@ function PlayerMove(e){
 
     // WGO: (1) Will call the computer move function after the player move has been initiated.
     // The computer move will have a timer in-order for the player animation to finish. 
-    // Overall wait for the computer movement will be 1.2 secs for right now.
+    // Overall wait for the computer movement will be 1.9 secs (extra 600 secs) for right now.
     // We are using time for simple algorithms.  
     // (2) The computers damage caused by the players attack will also be removed once
     // the computer is ready for their action. 
     setTimeout(() => { 
-        const damage = document.querySelector('.battle-arena-section > section:nth-child(2) > div');
-        compCard.removeChild(damage); 
         ComputerMove(); 
-    }, 1200);
+    }, 1900);
 }
 
 // ComputerMove(): Each player move command will be stationed in this function.
 function ComputerMove(){
+    const userCard = document.querySelector('.battle-arena-section > section:nth-child(1)');
     console.log('Computer turn to attack...'); // Testing 
     // TODO Note: I will have to implement some type of the computer movement algorithm.
     // I may base it on a difficulty level and machine learning algorithms. 
@@ -321,6 +356,31 @@ function ComputerMove(){
     {
         const compCard = document.querySelector('.battle-arena-section > section:nth-child(2)');
         compCard.classList.add('comp-card-attack-anim');
+
+        const actionResponse = Actions('Attack', 'Computer', gameTools.battleCard, gameTools.compBattleCard);
+
+        const damage = document.createElement('div'); 
+        damage.textContent = actionResponse; 
+
+        // WGO: Will add the damage amount to the 'User Card' after the computer attack. Appended after .5s. 
+        setTimeout(() => {
+            userCard.appendChild(damage); 
+        }, 500);
+
+        // WGO: (1) Will remove the 'Comp Card Attack Animation' after an additional .8 secs (800 secs more).
+        // (2) Removes the damage the from the 'User Card' after .8 secs (800 secs more).
+        // (3) Reloads all the sections in the 'Battle Levels Content' to visually see the 'User Card' stats 
+        // after the computer attack. 
+        // Finialized: This sequence occurs right after the User Card receives damage, that is .8 secs (800 secs more)
+        // which results in 1.3 secs (1300 secs total).
+        setTimeout(() => {
+            compCard.classList.remove('comp-card-attack-anim');  
+            userCard.removeChild(damage);
+            BattleLevelsContent(2); 
+        }, 1300);
     }
 
+    // setTimeout(() => {
+    //     BattleLevelsContent(2);
+    // }, 1200);
 }

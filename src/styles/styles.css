@@ -186,17 +186,33 @@ body{
     .battle-arena-section > section:nth-child(2) > div{ /* Comp Card Battle Damage - Will contain damage animation. */
         border: 1px solid black;
         position: absolute;
-        animation-name: compCardBattleAnim;
+        animation-name: compCardDamageAnim;
         animation-duration: 0.7s; 
         animation-timing-function: ease-in-out;
         animation-fill-mode: forwards;  
     }
-    @keyframes compCardBattleAnim{
+    @keyframes compCardDamageAnim{
         from{
             transform: translate(0);
         }
         to{
             transform: translate(-100px, -20px); 
+        }
+    }
+    .battle-arena-section > section:nth-child(1) > div{ /* User Card Battle Damage - Will contain damage animation. */
+        border: 1px solid black;
+        position: absolute;
+        animation-name: userCardDamageAnim;
+        animation-duration: 0.7s; 
+        animation-timing-function: ease-in-out;
+        animation-fill-mode: forwards; 
+    }
+    @keyframes userCardDamageAnim{
+        from{
+            transform: translate(0);
+        }
+        to{
+            transform: translate(130px, -20px); 
         }
     }
 

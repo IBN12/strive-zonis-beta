@@ -5,8 +5,10 @@ export const gameTools = {
     battleCard: null,
     switchedCards: false,
     currentLevel: 1,
+    userSingularityPoints: null,
     
     compBattleCard: null,
     compSwitchedCards: false,
     compCardDeckCreated: false, 
+    compSingularityPoints: null, 
 }
