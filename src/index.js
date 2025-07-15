@@ -1,5 +1,6 @@
 import { InitiateApplication } from "./DOMContent/DOMContent";
 import { ShuffleCardsContent } from "./GameContent/ShuffleCardsContent";
+import { HomeSectorContent } from "./GameContent/HomeSectorContent";
 
 import './styles/styles.css';
 
@@ -16,5 +17,6 @@ InitiateApplication();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Testing Center: 
 // All of these functions are in this file for testing purposes and will be removed once testing is over. 
+// HomeSectorContent(); // Testing and editing the home sector content. (This is the homepage for the application)
 ShuffleCardsContent(0); // Testing the shuffle Cards Content 
 

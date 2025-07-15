@@ -33,4 +33,29 @@ export function ModifyContentTools(content, reason){
             });
         }
     }
+    else if (content === 'Battle Levels Content')
+    {
+        const commandSectionBtns = document.querySelectorAll('.battle-command-section > button');
+        const battleCardDeckSection = document.querySelectorAll('.battle-card-deck-section > section > div');
+        if (reason === "Attack")
+        {
+            battleCardDeckSection.forEach((card) => {
+                card.classList.add('no-click'); 
+            });
+
+            commandSectionBtns.forEach((button) => {
+                button.disabled = true; 
+            });
+        }
+        else if (reason === "Attack Sequence Done")
+        {
+            battleCardDeckSection.forEach((card) => {
+                card.classList.remove('no-click'); 
+            });
+            
+            commandSectionBtns.forEach((button) => {
+                button.disabled = false; 
+            });
+        }
+    }
 }

@@ -4,6 +4,8 @@ import { levels } from "../GameProg/Levels";
 import { otherCards } from "../GameProg/OtherCards";
 import { Actions } from "../GameProg/Actions";
 import { CreateCompCardDeck, compCards } from "../GameProg/CompCards";
+import { CardDefeated } from "../GameProg/CardDefeated";
+import { ModifyContentTools } from "../GameProg/ModifyContentTools";
 
 // BattleLevelsContent(): The battle level content.
 export function BattleLevelsContent(controls){
@@ -16,6 +18,10 @@ export function BattleLevelsContent(controls){
      * 2 => Will reset all the sections to display the computers new esse stat in the
      * 'BattleCardStatsSection'. This is done right after the player attacks the computer,
      * and the computer produces the damage output. 
+     * 
+     * 3 => Will reset the 'BattleCardStatsSection()', 'BattleCardDeckSection()', and 'BattleCommandSection()' when
+     * the 'Computer Battle Card' is defeated. Other functions and variables will also be reset inside the 
+     * 'BattleLevelsContent(3)' function. 
      */
 
     // Create comp card deck based on the level: 
@@ -69,6 +75,36 @@ export function BattleLevelsContent(controls){
         BattleCardDeckSection();
         BattleCommandSection();
     }
+    else if (controls === 3)
+    {
+        battleLevelsContent.removeChild(battleCardStatsSection); 
+        battleLevelsContent.removeChild(battleCardDeckSection); 
+        battleLevelsContent.removeChild(battleCommandSection); 
+        BattleCardStatsSection();
+        BattleCardDeckSection();
+        BattleCommandSection(); 
+
+        // WGO: New SP Score with the animation finishing after the 'action response'
+        BattleLevelsContent(2); 
+
+        // WGO: (1) Will initiate the death animation for the 'computer battle card'.
+        // (2) Will call the 'CardDefeated' function to eliminate the the 'computer battle card' from the 'comp card deck'.
+        // Extra 400 seconds added after the 'BattleLevelsContent' was reset. 
+        setTimeout(() => {
+            const compCard = document.querySelector('.battle-arena-section > section:nth-child(2)');
+            compCard.classList.add('death-anim');
+            gameTools.compCardDeathAnimAdded = true; 
+
+            CardDefeated(gameTools.compBattleCard, compCards, gameTools.compCardDeathAnimAdded);
+            gameTools.compCardDeathAnimAdded = false; 
+        }, 1600);
+
+        // WGO: Reset the entire 'BattleLevelsContent' to remove the 'computer battle card' from the arena.  
+        // 900 extra seconds after 'Computer Battle Card' death animation is added and completes animation.
+        setTimeout(() => {
+            BattleLevelsContent(1);
+        }, 2500);
+    }
 }
 
 // BattleLevelSection(): Will display the levels that the user is on.  
@@ -100,10 +136,47 @@ function BattleSingularityPointSection(){
     const battleSingularityPointSection = document.createElement('section'); 
     battleSingularityPointSection.classList.add('battle-singularity-point-section');
 
+    // User SP Logic: 
     const userSP = document.createElement('section'); 
-    userSP.textContent = '0 SP';
+    if (gameTools.userSingularityPoints > 0 && gameTools.userTurn)
+    {
+        gameTools.userTurn = false; 
+
+        if (gameTools.userSingularityPoints > gameTools.userPreviousSingularityPoints)
+        {
+            userSP.classList.add("sp-anim"); 
+        }
+
+        userSP.textContent = `${gameTools.userSingularityPoints} SP`; 
+        gameTools.userPreviousSingularityPoints = gameTools.userSingularityPoints; 
+        console.log("Player SP: ", gameTools.userSingularityPoints); // Testing 
+        console.log("\n"); // Testing 
+    }
+    else
+    {
+        userSP.textContent = `${gameTools.userSingularityPoints} SP`; 
+    }
+
+    // Computer SP Logic:
     const compSP = document.createElement('section'); 
-    compSP.textContent = '0 SP';
+    if (gameTools.compSingularityPoints > 0 && gameTools.compTurn)
+    {
+        gameTools.compTurn = false; 
+
+        if (gameTools.compSingularityPoints > gameTools.compPreviousSingularityPoints)
+        {
+            compSP.classList.add("sp-anim"); 
+        }
+
+        compSP.textContent = `${gameTools.compSingularityPoints} SP`; 
+        gameTools.compPreviousSingularityPoints = gameTools.compSingularityPoints;
+        console.log("Computer SP: ", gameTools.compSingularityPoints); // Testing 
+        console.log("\n"); // Testing 
+    }
+    else
+    {
+        compSP.textContent = `${gameTools.compSingularityPoints} SP`;  
+    }
 
     battleSingularityPointSection.appendChild(userSP);
     battleSingularityPointSection.appendChild(compSP); 
@@ -122,11 +195,11 @@ function BattleArenaSection(){
     const userCard = document.createElement('section');
     if (gameTools.switchedCards)
     {
-        userCard.textContent = gameTools.battleCard; 
+        userCard.textContent = gameTools.battleCard.name; 
     }
     else 
     {
-        gameTools.battleCard = userCards[0].name;  // Set 'current battle card' before switching cards. 
+        gameTools.battleCard = userCards[0]; // Set 'current battle card' before switching cards.
         userCard.textContent = userCards[0].name; // Default card for the battle arena before switching cards.  
     }
 
@@ -138,7 +211,8 @@ function BattleArenaSection(){
     }
     else
     {
-        gameTools.compBattleCard = compCards[0].name; // Set 'current comp battle card' before comp switches cards. 
+        // gameTools.compBattleCard = compCards[0].name; // Set 'current comp battle card' before comp switches cards. 
+        gameTools.compBattleCard = compCards[0];
         compCard.textContent = compCards[0].name;  // Default comp card for th  battle arena before switching cards. 
     }
     
@@ -157,7 +231,7 @@ function BattleCardStatsSection(){
     // User Battle Card Stats---
     const userBattleCardStats = document.createElement('section'); 
     userCards.forEach((card) => {
-        if (card.name === gameTools.battleCard)
+        if (card.name === gameTools.battleCard.name)
         {
             const cate = document.createElement('div'); 
             cate.textContent = `Cate: ${card.cate}`;
@@ -181,7 +255,7 @@ function BattleCardStatsSection(){
     // Comp Battle Card Stats--- 
     const compBattleCardStats = document.createElement('section'); 
     compCards.forEach((card) => {
-        if (card.name === gameTools.compBattleCard)
+        if (card.name === gameTools.compBattleCard.name)
         {
             const cate = document.createElement('div');
             cate.textContent = `Cate: ${card.cate}`;
@@ -215,6 +289,7 @@ function BattleCardDeckSection(){
     battleCardDeckSection.classList.add('battle-card-deck-section'); 
 
     const playerBattleCard = document.querySelector('.battle-arena-section > section:nth-child(1)');
+    const computerBattleCard = document.querySelector('.battle-arena-section > section:nth-child(2)'); 
 
     // User Card Deck---
     const userCardDeck = document.createElement('section');
@@ -234,7 +309,7 @@ function BattleCardDeckSection(){
     // Comp Card Deck--- 
     const compCardDeck = document.createElement('section'); 
     otherCards.forEach((card) => {
-        if (card.levelCard === gameTools.currentLevel)
+        if (card.name !== computerBattleCard.textContent && card.levelCard === gameTools.currentLevel && !card.defeated)
         {
             const compCard = document.createElement('div');
             compCard.textContent = card.shortName;
@@ -254,7 +329,7 @@ function SwitchCards(e){
     userCards.forEach((card) => {
         if (card.shortName === e.target.textContent)
         {
-            gameTools.battleCard = card.name; 
+            gameTools.battleCard = card; 
         }
     });
 
@@ -288,8 +363,18 @@ function PlayerMove(e){
     const compCard = document.querySelector('.battle-arena-section > section:nth-child(2)');
     const userCard = document.querySelector('.battle-arena-section > section:nth-child(1)');
 
+    gameTools.userTurn = true; 
+    console.log("Player Action..."); // Testing 
+
     if (e.target.textContent === 'Attack') // Attack Move
     {
+        // Gather the action that the user took and save it as data until the next turn: 
+        gameTools.userAction = e.target.textContent;
+
+        // ModifyContentTools: Lets modify content tools so the application doesn't cause any errors from rapid clicking
+        // or animation interruption:
+        ModifyContentTools("Battle Levels Content", "Attack"); 
+
         userCard.classList.add('user-card-attack-anim');
 
         // Actions(): Will represent all Player and Computer Movements. 
@@ -298,49 +383,78 @@ function PlayerMove(e){
         const damage = document.createElement('div'); 
         damage.textContent = actionResponse; 
 
-        console.log("User SP: ", gameTools.userSingularityPoints); // Testing 
-
-        // WGO: Will append the the 'Comp Battle Card' and produce the damage response cause by the players attack.
+        // WGO: Will append the 'Comp Battle Card' and produce the damage response cause by the players attack.
         // Will wait 0.5secs for the damage element to append so the computer doesn't attack right when the damage appends. 
         setTimeout(() => {
             compCard.appendChild(damage);
         }, 500); 
 
-        // WGO: (1) Will remove the Player 'user card attack animation'.
-        // (2) Damage response will be removed from the 'Comp Battle Card'. 
-        // (3) Will reset all the sections in the 'Battle Levels Content' to showcase the new amount of esse
-        // that the 'Comp Battle Card' has after the damage caused the Player (An extra 800 secs added after the
-        // damage response was added to the 'Comp Battle Card' | Total Time: 1300 secs | Control === 2). 
-        setTimeout(() => {
-            userCard.classList.remove('user-card-attack-anim');
+        if (gameTools.compBattleCard.defeated) // Test if the user has defeated the computer battle card. 
+        {
+            // WGO: Main Reason: Controls=3 resets the content to display esse at 0 when the 'comp battle card' has been defeated.
+            // Only the 'battle card stats section', 'battle card deck section', and 'battle card command section' will
+            // be reset so the death animation can still initiate. 
+            // 700 extra seconds after 'Computer Battle Card' damage was added. 
+            setTimeout(() => {
+                userCard.classList.remove('user-card-attack-anim'); 
 
-            const damage = document.querySelector('.battle-arena-section > section:nth-child(2) > div');
-            compCard.removeChild(damage); 
+                compCard.removeChild(damage);
 
-            BattleLevelsContent(2); 
-        }, 1300);
+                BattleLevelsContent(3); 
+
+                ModifyContentTools("Battle Levels Content", "Attack"); 
+            }, 1200);
+        }
+        else
+        {
+            // WGO: (1) Will remove the Player 'user card attack animation'.
+            // (2) Damage response will be removed from the 'Comp Battle Card'. 
+            // (3) Will reset all the sections in the 'Battle Levels Content' to showcase the new amount of esse
+            // that the 'Comp Battle Card' has after the damage caused the Player (An extra 800 secs added after the
+            // damage response was added to the 'Comp Battle Card' | Total Time: 1300 secs | Control === 2). 
+            setTimeout(() => {
+                userCard.classList.remove('user-card-attack-anim');
+
+                const damage = document.querySelector('.battle-arena-section > section:nth-child(2) > div');
+                compCard.removeChild(damage); 
+
+                BattleLevelsContent(2); 
+
+                ModifyContentTools("Battle Levels Content", "Attack"); 
+            }, 1300);
+
+            // WGO: (1) Will call the computer move function after the player move has been initiated.
+            // The computer move will have a timer in-order for the player animation to finish. 
+            // Overall wait for the computer movement will be 1.9 secs (extra 600 secs) for right now.
+            // We are using time for simple algorithms.  
+            // (2) The computers damage caused by the players attack will also be removed once
+            // the computer is ready for their action. 
+            setTimeout(() => { 
+                ComputerMove(); 
+            }, 1900);
+        }
     }
-    if (e.target.textContent === 'defend') // Defend Move 
+    if (e.target.textContent === 'Defend') // Defend Move 
     {
-        const userCard = document.querySelector('.battle-arena-section > section:nth-child(1)'); 
-        console.log(userCard); // Testing 
-    }
+        const defend = document.createElement('section'); 
+        defend.classList.add('user-card-defend-anim');
 
-    // WGO: (1) Will call the computer move function after the player move has been initiated.
-    // The computer move will have a timer in-order for the player animation to finish. 
-    // Overall wait for the computer movement will be 1.9 secs (extra 600 secs) for right now.
-    // We are using time for simple algorithms.  
-    // (2) The computers damage caused by the players attack will also be removed once
-    // the computer is ready for their action. 
-    setTimeout(() => { 
-        ComputerMove(); 
-    }, 1900);
+        let userCardHeight = userCard.clientHeight;
+        let userCardWidth = userCard.clientWidth;
+        document.documentElement.style.setProperty('--user-card-height', `${userCardHeight}px`);
+        document.documentElement.style.setProperty('--user-card-width', `${userCardWidth}px`);
+
+        userCard.appendChild(defend); 
+    }
 }
 
 // ComputerMove(): Each player move command will be stationed in this function.
 function ComputerMove(){
+    const compCard = document.querySelector('.battle-arena-section > section:nth-child(2)');
     const userCard = document.querySelector('.battle-arena-section > section:nth-child(1)');
-    console.log('Computer turn to attack...'); // Testing 
+
+    gameTools.compTurn = true; 
+    console.log("Computer Action..."); // Testing 
     // TODO Note: I will have to implement some type of the computer movement algorithm.
     // I may base it on a difficulty level and machine learning algorithms. 
     // But for now I will make a simple algorithm for computer movement. 
@@ -354,7 +468,6 @@ function ComputerMove(){
 
     if (compMovement === 'Attack') // Computer Attack
     {
-        const compCard = document.querySelector('.battle-arena-section > section:nth-child(2)');
         compCard.classList.add('comp-card-attack-anim');
 
         const actionResponse = Actions('Attack', 'Computer', gameTools.battleCard, gameTools.compBattleCard);
@@ -377,7 +490,14 @@ function ComputerMove(){
             compCard.classList.remove('comp-card-attack-anim');  
             userCard.removeChild(damage);
             BattleLevelsContent(2); 
+
+            ModifyContentTools("Battle Levels Content", "Attack"); 
         }, 1300);
+
+        // WGO: ...
+        setTimeout(() => {
+            ModifyContentTools("Battle Levels Content", "Attack Sequence Done"); 
+        }, 1900);
     }
 
     // setTimeout(() => {

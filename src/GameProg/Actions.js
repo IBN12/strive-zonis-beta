@@ -1,29 +1,13 @@
-import { otherCards } from "./OtherCards";
 import { userCards } from "./UserCards";
+import { compCards } from "./CompCards";
 import { singularityPoints } from "./SingularityPoints";
+import { CardDefeated } from "./CardDefeated";
+import { gameTools } from "./GameTools";
+
 
 // Actions(): Will return a response for every action that the player takes.  
-export function Actions(action, actionBy, pBattleCard, cBattleCard){
-
-    let playerBattleCard = null;
-    let compBattleCard = null;
+export function Actions(action, actionBy, playerBattleCard, compBattleCard){
     const attkPoints = [1/3, 1/2, 0, 2/3, 3/4, 1, 0]; 
-
-    // Search for the User Battle Card object currently in the battle arena:
-    userCards.forEach((card) => {
-        if (card.name === pBattleCard)
-        {
-            playerBattleCard = card;
-        }
-    });    
-
-    // Search for the Computer Battle Card object currently in the battle arena:
-    otherCards.forEach((card) => {
-        if (card.name === cBattleCard)
-        {
-            compBattleCard = card;
-        }
-    });
 
     if (actionBy === "Player") // Player Actions
     {
@@ -48,7 +32,14 @@ export function Actions(action, actionBy, pBattleCard, cBattleCard){
 
             compBattleCard.esse -= playerAttk;
 
-            singularityPoints(action, attkPoints[randomNumber]); // User Singularity Points 
+            //  Test if the 'comp battle card' has been defeated. 
+            if (compBattleCard.esse <= 0)
+            {
+                console.log(`${compBattleCard.name} has been defeated!`); // Testing 
+                CardDefeated(compBattleCard, compCards, gameTools.compCardDeathAnimAdded);
+            }
+
+            singularityPoints(action, actionBy, attkPoints[randomNumber]); // User Singularity Points 
          
             if (playerAttk === 0)
             {
@@ -87,6 +78,8 @@ export function Actions(action, actionBy, pBattleCard, cBattleCard){
             compAttk = Number(compAttk.toFixed(0)); 
 
             playerBattleCard.esse -= compAttk;
+
+            singularityPoints(action, actionBy, attkPoints[randomNumber]); // Computer Singularity Points 
             
             if (compAttk === 0)
             {

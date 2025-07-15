@@ -2,9 +2,20 @@
 export function InitiateApplication(){
     console.log("Application will initiate"); 
 
+    HomeSectorDOM();
     MainMenuDOM();
     ShuffleCardsDOM(); 
     BattleLevelsDOM(); 
+}
+
+// HomeSectorDOM(): The home page for the application. 
+function HomeSectorDOM(){
+    const content = document.getElementById('content');
+    
+    const homeSectorContent = document.createElement('div');
+    homeSectorContent.classList.add('home-sector-content'); 
+
+    content.appendChild(homeSectorContent); 
 }
 
 // MainMenuContent(): The main menu content. 
@@ -16,8 +27,8 @@ function MainMenuDOM(){
 
     content.appendChild(mainMenuContent); 
 
-    AppTitle();
-    MenuButtons(); 
+    // AppTitle();
+    // MenuButtons(); 
 }
 
 // AppTitle(): The Application title.

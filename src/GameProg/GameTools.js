@@ -2,13 +2,22 @@
 export const gameTools = {
     numberOfShuffles: 0,
     shuffleLimitReached: false, 
+    currentLevel: 1,
+
     battleCard: null,
     switchedCards: false,
-    currentLevel: 1,
-    userSingularityPoints: null,
+    userTurn: false,
+    userSingularityPoints: 0,
+    userPreviousSingularityPoints: 0,
+    battleCardDeathAnimAdded: false,
+    userAction: null,
     
     compBattleCard: null,
     compSwitchedCards: false,
     compCardDeckCreated: false, 
-    compSingularityPoints: null, 
+    compSingularityPoints: 0, 
+    compPreviousSingularityPoints: 0, 
+    compTurn: false,
+    compCardDeathAnimAdded: false, 
+    compAction: null, 
 }

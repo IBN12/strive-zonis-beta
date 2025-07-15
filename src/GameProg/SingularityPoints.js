@@ -1,7 +1,7 @@
 import { gameTools } from "./GameTools";
 
 // singularityPoints(): Singularity points for certain actions will be gathered in this function. 
-export function singularityPoints(action, attkPoints){
+export function singularityPoints(action, actionBy, attkPoints){
 
     /** |Temporary Attack Point System|:
     * 0: 0 * attk
@@ -25,30 +25,41 @@ export function singularityPoints(action, attkPoints){
      * 50 SP: 1 Critical Attk
     */
 
+    let singularityPts = null; 
+
     if (action === "Attack")
     {
         switch(attkPoints)
         {
             case 0:
-                gameTools.userSingularityPoints += 0;
+                singularityPts = 0;
                 break;
             case 1/3:
-                gameTools.userSingularityPoints += 10;
+                singularityPts = 10;
                 break;
             case 1/2:
-                gameTools.userSingularityPoints += 20;
+                singularityPts = 20;
                 break;
             case 2/3:
-                gameTools.userSingularityPoints += 30;
+                singularityPts = 30;
                 break;
             case 3/4:
-                gameTools.userSingularityPoints += 40;
+                singularityPts = 40;
                 break;
             case 1:
-                gameTools.userSingularityPoints += 50;
+                singularityPts = 50;
                 break;
             default:
-                gameTools.userSingularityPoints = null; 
+                singularityPts = null; 
+        }
+
+        if (actionBy === "Player")
+        {
+            gameTools.userSingularityPoints += singularityPts;
+        }
+        else
+        {
+            gameTools.compSingularityPoints += singularityPts; 
         }
     }
 

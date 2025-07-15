@@ -1,3 +1,9 @@
+/* root - The main root of the application. */
+:root{
+    --user-card-height: 0;
+    --user-card-width: 0; 
+}
+
 /* body - The entire body for the application. */
 body{
     padding: 0;
@@ -6,6 +12,11 @@ body{
 
 *{
     box-sizing: border-box;
+}
+
+/* |Home Sector Content| */
+.home-sector-content{
+    border: 1px solid orchid; 
 }
 
 .no-click{
@@ -32,6 +43,7 @@ body{
         gap: 10px;
 
         border: 1px solid purple;
+        margin-top: 20px; /* Temporary during testing */
     }
 
     /* |Shuffle Cards Content| */
@@ -168,6 +180,20 @@ body{
         text-align: center; 
         border: 1px solid black;
     }
+    .sp-anim{
+        animation-name: singularityAnimation;
+        animation-duration: .7s;
+        animation-timing-function: ease-in-out; 
+    }
+    @keyframes singularityAnimation{
+        from{
+            transform: translate(0);
+        }
+        to{
+            transform: perspective(800px) translateZ(50px);   
+            border: 2px solid #facc15;
+        }
+    }
 
     .battle-arena-section{ /* Battle Arena Section */ 
         display: flex; 
@@ -213,6 +239,36 @@ body{
         }
         to{
             transform: translate(130px, -20px); 
+        }
+    }
+    .death-anim{ /* Battle card death animation for both the user and computer. */
+        animation-name: deathAnim;
+        animation-timing-function: ease-in-out;
+        animation-duration: .8s;
+        background-color: rgba(255, 0, 0, 0.418);
+        border: 1px solid rgba(255, 0, 0, 0.418);
+    }
+    @keyframes deathAnim{
+        0%{
+            transform: perspective(800px) rotateY(0);
+        }
+        10%{
+            transform: perspective(800px) rotateY(10deg);
+        }
+        20%{
+            transform: perspective(800px) rotateY(40deg);
+        }
+        40%{
+            transform: perspective(800px) rotateY(-10deg); 
+        }
+        60%{
+            transform: perspective(800px) rotateY(-40deg); 
+        }
+        80%{
+            transform: perspective(800px) rotateY(10deg); 
+        }
+        100%{
+            transform: perspective(800px) rotateY(40deg); 
         }
     }
 
@@ -283,4 +339,12 @@ body{
             transform: translateX(-20px);  
         }
     }
+    .user-card-defend-anim{ /* Battle Command: User Defend Attack Anim */
+        position: absolute; 
+        background-color: #818df856;
+        border: 1px solid #818df856;
+        width: var(--user-card-width);
+        height: var(--user-card-height); 
+    }
+
 } 
