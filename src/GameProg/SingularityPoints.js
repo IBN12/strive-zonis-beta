@@ -26,6 +26,21 @@ export function singularityPoints(action, actionBy, attkPoints){
     */
 
     let singularityPts = null; 
+    let singularityPtsLost = 0;
+
+    if (gameTools.userAction === "Defend")
+    {
+        // WGO: If the battle cards def equals the attack damage then this will result in a 0 Hit! damage.
+        // All 0 Hit! damages will receive 0 SP just like a miss. This counts as a full defend for the battle card. 
+        if (gameTools.compAttkDamage === 0) 
+        {
+            attkPoints = 0;
+        }
+        else
+        {
+            singularityPtsLost = gameTools.compAttkDamage;
+        }
+    }
 
     if (action === "Attack")
     {
@@ -35,19 +50,19 @@ export function singularityPoints(action, actionBy, attkPoints){
                 singularityPts = 0;
                 break;
             case 1/3:
-                singularityPts = 10;
+                singularityPts = 10 - singularityPtsLost;
                 break;
             case 1/2:
-                singularityPts = 20;
+                singularityPts = 20 - singularityPtsLost;
                 break;
             case 2/3:
-                singularityPts = 30;
+                singularityPts = 30 - singularityPtsLost;
                 break;
             case 3/4:
-                singularityPts = 40;
+                singularityPts = 40 - singularityPtsLost;
                 break;
             case 1:
-                singularityPts = 50;
+                singularityPts = 50 - singularityPtsLost;
                 break;
             default:
                 singularityPts = null; 

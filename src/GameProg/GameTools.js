@@ -11,6 +11,7 @@ export const gameTools = {
     userPreviousSingularityPoints: 0,
     battleCardDeathAnimAdded: false,
     userAction: null,
+    userAttkDamage: 0,
     
     compBattleCard: null,
     compSwitchedCards: false,
@@ -20,4 +21,5 @@ export const gameTools = {
     compTurn: false,
     compCardDeathAnimAdded: false, 
     compAction: null, 
+    compAttkDamage: 0, 
 }

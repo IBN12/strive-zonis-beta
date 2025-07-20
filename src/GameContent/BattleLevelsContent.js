@@ -74,6 +74,8 @@ export function BattleLevelsContent(controls){
         BattleCardStatsSection();
         BattleCardDeckSection();
         BattleCommandSection();
+
+        BattleActions();
     }
     else if (controls === 3)
     {
@@ -439,12 +441,29 @@ function PlayerMove(e){
         const defend = document.createElement('section'); 
         defend.classList.add('user-card-defend-anim');
 
+        // Place the defense shield on the player at the correct width and height. 
         let userCardHeight = userCard.clientHeight;
         let userCardWidth = userCard.clientWidth;
         document.documentElement.style.setProperty('--user-card-height', `${userCardHeight}px`);
         document.documentElement.style.setProperty('--user-card-width', `${userCardWidth}px`);
 
+        const actionResponse = Actions('Defend', 'Player', gameTools.battleCard, gameTools.compBattleCard);
+        
+        const defendNote = document.createElement('div'); 
+        defendNote.textContent = actionResponse; 
+        userCard.appendChild(defendNote); 
+
         userCard.appendChild(defend); 
+
+        // WGO: ...
+        setTimeout(() => {
+            BattleLevelsContent(2);
+        }, 1000); 
+
+        // WGO: ...
+        setTimeout(() => {
+            ComputerMove();
+        }, 1300); 
     }
 }
 
@@ -487,8 +506,10 @@ function ComputerMove(){
         // Finialized: This sequence occurs right after the User Card receives damage, that is .8 secs (800 secs more)
         // which results in 1.3 secs (1300 secs total).
         setTimeout(() => {
-            compCard.classList.remove('comp-card-attack-anim');  
+            compCard.classList.remove('comp-card-attack-anim'); 
+
             userCard.removeChild(damage);
+
             BattleLevelsContent(2); 
 
             ModifyContentTools("Battle Levels Content", "Attack"); 
@@ -503,4 +524,29 @@ function ComputerMove(){
     // setTimeout(() => {
     //     BattleLevelsContent(2);
     // }, 1200);
+}
+
+// BattleActions(): Will maintain previous and current actions by the user and computer.
+function BattleActions()
+{
+    const userCard = document.querySelector('.battle-arena-section > section:nth-child(1)'); 
+
+    if (gameTools.userTurn)
+    {
+        // If the previous user action was 'Defend' during the current computer action: 
+        if (gameTools.userAction === "Defend")
+        {
+            gameTools.userTurn = false; // End user turn for computer turn. 
+
+            const defend = document.createElement('section');
+            defend.classList.add('user-card-defend-anim');
+
+            let userCardHeight = userCard.clientHeight;
+            let userCardWidth = userCard.clientWidth;
+            document.documentElement.style.setProperty('--user-card-height', `${userCardHeight}px`);
+            document.documentElement.style.setProperty('--user-card-width', `${userCardWidth}px`);
+
+            userCard.appendChild(defend); 
+        }
+    }
 }

@@ -13,6 +13,8 @@ export function Actions(action, actionBy, playerBattleCard, compBattleCard){
     {
         if (action === "Attack")
         {
+            gameTools.userAction = "Attack";
+
             // TODO Note: The attack point system will change, this is just a temporary
             // system for now. 
             /** Temporary Standard Attack Point System: 
@@ -54,11 +56,20 @@ export function Actions(action, actionBy, playerBattleCard, compBattleCard){
                 return `${playerAttk} Critical Hit!`; 
             }
         }
+        else if (action === "Defend")
+        {
+            gameTools.userAction = 'Defend'; 
+            
+            return 'Defending'; 
+        }
     }
     else if (actionBy === "Computer") // Computer Actions 
     {
         if (action === "Attack")
         {
+            gameTools.compAction = "Attack"; 
+            let attkDamageLost = 0;
+
             // Computer Attack Logic....
             // TODO Note: The attack point system will change, this is just a temporary
             // system for now. 
@@ -77,7 +88,35 @@ export function Actions(action, actionBy, playerBattleCard, compBattleCard){
 
             compAttk = Number(compAttk.toFixed(0)); 
 
-            playerBattleCard.esse -= compAttk;
+            if (gameTools.userAction === "Defend")
+            {
+                if (compAttk !== 0) // Not a miss
+                {
+                    attkDamageLost = playerBattleCard.def;
+
+                    if ((compAttk - playerBattleCard.def) <= 0) // Full Defend
+                    {
+                        playerBattleCard.esse -= 0
+                        gameTools.compAttkDamage = 0; 
+                    }
+                    else
+                    {
+                        playerBattleCard.esse -= (compAttk - playerBattleCard.def); 
+                        gameTools.compAttkDamage = compAttk - playerBattleCard.def; 
+                        console.log("Computer Attack damage after user defends: ", (compAttk - playerBattleCard.def)); // Testing  
+                    }
+                }
+                else
+                {
+                    playerBattleCard.esse -= compAttk; 
+                    gameTools.compAttkDamage = compAttk; 
+                }
+            }
+            else
+            {
+                playerBattleCard.esse -= compAttk;
+                gameTools.compAttkDamage = compAttk; 
+            }
 
             singularityPoints(action, actionBy, attkPoints[randomNumber]); // Computer Singularity Points 
             
@@ -87,11 +126,18 @@ export function Actions(action, actionBy, playerBattleCard, compBattleCard){
             }
             else if (compAttk !== 0 && compAttk !== 1)
             {
-                return `${compAttk} Hit!`; 
+                if (gameTools.compAttkDamage === 0)
+                {
+                    return `0 Hit!`; 
+                }
+                else 
+                {
+                    return `${compAttk - attkDamageLost} Hit!`; 
+                }
             }
             else 
             {
-                return `${compAttk} Critical Hit!`; 
+                return `${compAttk - attkDamageLost} Critical Hit!`; 
             }
         }
     }
