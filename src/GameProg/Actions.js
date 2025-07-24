@@ -13,8 +13,6 @@ export function Actions(action, actionBy, playerBattleCard, compBattleCard){
     {
         if (action === "Attack")
         {
-            gameTools.userAction = "Attack";
-
             // TODO Note: The attack point system will change, this is just a temporary
             // system for now. 
             /** Temporary Standard Attack Point System: 
@@ -33,6 +31,8 @@ export function Actions(action, actionBy, playerBattleCard, compBattleCard){
             playerAttk = Number(playerAttk.toFixed(0));
 
             compBattleCard.esse -= playerAttk;
+
+            gameTools.userAttkDamage = playerAttk; // Store the attk damage for analytics.
 
             //  Test if the 'comp battle card' has been defeated. 
             if (compBattleCard.esse <= 0)
@@ -57,9 +57,7 @@ export function Actions(action, actionBy, playerBattleCard, compBattleCard){
             }
         }
         else if (action === "Defend")
-        {
-            gameTools.userAction = 'Defend'; 
-            
+        {   
             return 'Defending'; 
         }
     }
@@ -90,6 +88,8 @@ export function Actions(action, actionBy, playerBattleCard, compBattleCard){
 
             if (gameTools.userAction === "Defend")
             {
+                gameTools.userAction = null; // Set the user action back to null to avoid defend continuation. 
+
                 if (compAttk !== 0) // Not a miss
                 {
                     attkDamageLost = playerBattleCard.def;

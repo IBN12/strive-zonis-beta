@@ -37,6 +37,7 @@ export function ModifyContentTools(content, reason){
     {
         const commandSectionBtns = document.querySelectorAll('.battle-command-section > button');
         const battleCardDeckSection = document.querySelectorAll('.battle-card-deck-section > section > div');
+
         if (reason === "Attack")
         {
             battleCardDeckSection.forEach((card) => {
@@ -56,6 +57,13 @@ export function ModifyContentTools(content, reason){
             commandSectionBtns.forEach((button) => {
                 button.disabled = false; 
             });
+        }
+
+        if (reason === "Defend")
+        {
+            battleCardDeckSection.forEach(card => card.classList.add('no-click'));
+            
+            commandSectionBtns.forEach(button => button.disabled = true); 
         }
     }
 }

@@ -6,6 +6,7 @@ import { Actions } from "../GameProg/Actions";
 import { CreateCompCardDeck, compCards } from "../GameProg/CompCards";
 import { CardDefeated } from "../GameProg/CardDefeated";
 import { ModifyContentTools } from "../GameProg/ModifyContentTools";
+import { ComputerDataAnalysis } from "../GameProg/ComputerDataAnalysis";
 
 // BattleLevelsContent(): The battle level content.
 export function BattleLevelsContent(controls){
@@ -156,6 +157,7 @@ function BattleSingularityPointSection(){
     }
     else
     {
+        gameTools.userTurn = false; 
         userSP.textContent = `${gameTools.userSingularityPoints} SP`; 
     }
 
@@ -177,6 +179,7 @@ function BattleSingularityPointSection(){
     }
     else
     {
+        gameTools.compTurn = false; 
         compSP.textContent = `${gameTools.compSingularityPoints} SP`;  
     }
 
@@ -434,10 +437,16 @@ function PlayerMove(e){
             setTimeout(() => { 
                 ComputerMove(); 
             }, 1900);
+            
         }
     }
     if (e.target.textContent === 'Defend') // Defend Move 
     {
+        gameTools.userAction = e.target.textContent;
+
+        ModifyContentTools("Battle Levels Content", "Defend");
+
+        // Add the defense shield class on the player - TODO: Change the name of the class. 
         const defend = document.createElement('section'); 
         defend.classList.add('user-card-defend-anim');
 
@@ -458,6 +467,8 @@ function PlayerMove(e){
         // WGO: ...
         setTimeout(() => {
             BattleLevelsContent(2);
+
+            ModifyContentTools("Battle Levels Content", "Defend"); 
         }, 1000); 
 
         // WGO: ...
@@ -483,7 +494,11 @@ function ComputerMove(){
      * compMovement => variable will hold every computer movement. Temporary movement is attack. 
      * Case 1: Computer Attack
     */
+
+    // The computer will read certain data elements derived from the battle. 
+    ComputerDataAnalysis(); 
     const compMovement = 'Attack';
+
 
     if (compMovement === 'Attack') // Computer Attack
     {
@@ -531,22 +546,16 @@ function BattleActions()
 {
     const userCard = document.querySelector('.battle-arena-section > section:nth-child(1)'); 
 
-    if (gameTools.userTurn)
+    if (gameTools.userAction === "Defend" )
     {
-        // If the previous user action was 'Defend' during the current computer action: 
-        if (gameTools.userAction === "Defend")
-        {
-            gameTools.userTurn = false; // End user turn for computer turn. 
+        const defend = document.createElement('section');
+        defend.classList.add('user-card-defend-anim');
 
-            const defend = document.createElement('section');
-            defend.classList.add('user-card-defend-anim');
+        let userCardHeight = userCard.clientHeight;
+        let userCardWidth = userCard.clientWidth;
+        document.documentElement.style.setProperty('--user-card-height', `${userCardHeight}px`);
+        document.documentElement.style.setProperty('--user-card-width', `${userCardWidth}px`);
 
-            let userCardHeight = userCard.clientHeight;
-            let userCardWidth = userCard.clientWidth;
-            document.documentElement.style.setProperty('--user-card-height', `${userCardHeight}px`);
-            document.documentElement.style.setProperty('--user-card-width', `${userCardWidth}px`);
-
-            userCard.appendChild(defend); 
-        }
+        userCard.appendChild(defend); 
     }
 }
