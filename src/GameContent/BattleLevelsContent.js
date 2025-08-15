@@ -7,6 +7,7 @@ import { CreateCompCardDeck, compCards } from "../GameProg/CompCards";
 import { CardDefeated } from "../GameProg/CardDefeated";
 import { ModifyContentTools } from "../GameProg/ModifyContentTools";
 import { ComputerDataAnalysis } from "../GameProg/ComputerDataAnalysis";
+import { ConfidenceSystem } from "../GameProg/ConfidenceSystem";
 
 // BattleLevelsContent(): The battle level content.
 export function BattleLevelsContent(controls){
@@ -65,6 +66,8 @@ export function BattleLevelsContent(controls){
     }
     else if (controls === 2)
     {
+        if (gameTools.compTurn) ComputerDataAnalysis("After"); 
+
         battleLevelsContent.removeChild(battleSingularityPointSection); 
         battleLevelsContent.removeChild(battleArenaSection);
         battleLevelsContent.removeChild(battleCardStatsSection); 
@@ -388,18 +391,19 @@ function PlayerMove(e){
         const damage = document.createElement('div'); 
         damage.textContent = actionResponse; 
 
-        // WGO: Will append the 'Comp Battle Card' and produce the damage response cause by the players attack.
+        // WGO: Will append to the 'Comp Battle Card' and produce the damage response caused by the players attack.
         // Will wait 0.5secs for the damage element to append so the computer doesn't attack right when the damage appends. 
         setTimeout(() => {
             compCard.appendChild(damage);
         }, 500); 
 
-        if (gameTools.compBattleCard.defeated) // Test if the user has defeated the computer battle card. 
+        // Test if the user has defeated the computer battle card. 
+        if (gameTools.compBattleCard.defeated)
         {
             // WGO: Main Reason: Controls=3 resets the content to display esse at 0 when the 'comp battle card' has been defeated.
             // Only the 'battle card stats section', 'battle card deck section', and 'battle card command section' will
             // be reset so the death animation can still initiate. 
-            // 700 extra seconds after 'Computer Battle Card' damage was added. 
+            // 700 (0.07) extra seconds after 'Computer Battle Card' damage was added. 
             setTimeout(() => {
                 userCard.classList.remove('user-card-attack-anim'); 
 
@@ -408,6 +412,13 @@ function PlayerMove(e){
                 BattleLevelsContent(3); 
 
                 ModifyContentTools("Battle Levels Content", "Attack"); 
+
+                // TODO: Maybe put these in its own function to modify back to its 
+                // default values. Function could be called 'ModifyGameProperties()'.
+                ConfidenceSystem.confidenceForBonumCate = .1;
+                ConfidenceSystem.confidenceForFereCate = .3; 
+                ConfidenceSystem.confidenceForSupraCate = .5;
+                ConfidenceSystem.confidenceLostFromCateEval = 0; 
             }, 1200);
         }
         else
@@ -495,8 +506,9 @@ function ComputerMove(){
      * Case 1: Computer Attack
     */
 
-    // The computer will read certain data elements derived from the battle. 
-    ComputerDataAnalysis(); 
+    // The computer will read certain data elements derived from the battle (Before Computer Move):
+    ComputerDataAnalysis("Before"); 
+
     const compMovement = 'Attack';
 
 

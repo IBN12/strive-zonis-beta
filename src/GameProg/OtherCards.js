@@ -7,7 +7,11 @@ export const otherCards = [
         attk: 43,
         def: 13,
         esse: 100,
-        defeated: false, 
+
+        defeated: false,
+        
+        confidence: 2, 
+        confidenceLost: 0,
     },
     {
         name: "Chairman Sam",
@@ -18,6 +22,8 @@ export const otherCards = [
         def: 19,
         esse: 100,
         defeated: false, 
+        confidence: 2, 
+        confidenceLost: 0,
     },
     {
         name: "Guard 1", 
@@ -28,6 +34,8 @@ export const otherCards = [
         def: 25,
         esse: 100, 
         defeated: false,
+        confidence: 2, 
+        confidenceLost: 0,
     },
     {
         name: "Guard 2",
@@ -38,6 +46,8 @@ export const otherCards = [
         def: 25,
         esse: 100, 
         defeated: false, 
+        confidence: 2, 
+        confidenceLost: 0, 
     },
 
     {
@@ -49,5 +59,7 @@ export const otherCards = [
         def: 0,
         esse: 100,
         defeated: false, 
+        confidence: 2, 
+        confidenceLost: 0, 
     }
 ]

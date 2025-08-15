@@ -3,6 +3,7 @@ export const gameTools = {
     numberOfShuffles: 0,
     shuffleLimitReached: false, 
     currentLevel: 1,
+    dataModelAddedTo: false, 
 
     battleCard: null,
     switchedCards: false,
@@ -11,6 +12,7 @@ export const gameTools = {
     userPreviousSingularityPoints: 0,
     battleCardDeathAnimAdded: false,
     userAction: null,
+    userAttkPoint: 0,
     userAttkDamage: 0,
     
     compBattleCard: null,

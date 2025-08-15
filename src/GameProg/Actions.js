@@ -33,6 +33,7 @@ export function Actions(action, actionBy, playerBattleCard, compBattleCard){
             compBattleCard.esse -= playerAttk;
 
             gameTools.userAttkDamage = playerAttk; // Store the attk damage for analytics.
+            gameTools.userAttkPoint = attkPoints[randomNumber]; // Store the attk point for analytics. 
 
             //  Test if the 'comp battle card' has been defeated. 
             if (compBattleCard.esse <= 0)
